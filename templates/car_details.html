@@ -1,0 +1,205 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>{{ car.make }} {{ car.model }} {{ car.year }} | Used Car in Ahmedabad</title>
+
+<meta name="description"
+content="Buy {{ car.make }} {{ car.model }} {{ car.year }} used car in Ahmedabad. Verified car details, price ₹{{ car.price }}. Contact dealer directly.">
+
+<link rel="canonical" href="https://carsavailable.in/car/{{ car.id }}/">
+
+{% if images %}
+<link rel="preload" as="image" href="/media/{{ images.0.image_path }}">
+{% endif %}
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4844588268218135"
+crossorigin="anonymous"></script>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+.slider-container { position: relative; width: 100%; border-radius: 12px; }
+.slider { overflow: hidden; }
+.track { display: flex; transition: transform 0.5s ease-in-out; width: 100%; }
+.slide { min-width: 100%; display: flex; align-items: center; justify-content: center; background: #ffffff; }
+
+.slide img {
+width: 100%;
+height: auto;
+max-height: 500px;
+object-fit: contain;
+}
+
+.dot {
+width: 10px;
+height: 10px;
+border-radius: 50%;
+background: #ccc;
+display: inline-block;
+margin: 4px;
+cursor: pointer;
+}
+
+.dot.active {
+background: #4f46e5;
+transform: scale(1.2);
+}
+</style>
+
+</head>
+
+<body class="bg-gray-100">
+
+<div class="max-w-4xl mx-auto p-4">
+
+<h1 class="text-3xl font-bold text-indigo-700 mb-4">
+{{ car.make }} {{ car.model }} {{ car.year }}
+</h1>
+
+<!-- IMAGE SLIDER -->
+
+<div class="relative overflow-hidden rounded-xl bg-gray-200 slider-container">
+
+<div class="slider">
+<div class="track" id="track">
+
+{% if images %}
+{% for img in images %}
+<div class="slide">
+<img src="/media/{{ img.image_path }}"
+alt="{{ car.make }} {{ car.model }}"
+loading="lazy">
+</div>
+{% endfor %}
+{% else %}
+<div class="slide">
+<img src="https://via.placeholder.com/800x500?text=No+Image+Available" alt="No Image">
+</div>
+{% endif %}
+
+</div>
+</div>
+
+<button onclick="prevBtn()" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white p-2 rounded-full z-10 transition-colors">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+viewBox="0 0 24 24" fill="none" stroke="currentColor"
+stroke-width="2.5" stroke-linecap="round"
+stroke-linejoin="round">
+<path d="m15 18-6-6 6-6"/>
+</svg>
+</button>
+
+<button onclick="nextBtn()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white p-2 rounded-full z-10 transition-colors">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+viewBox="0 0 24 24" fill="none" stroke="currentColor"
+stroke-width="2.5" stroke-linecap="round"
+stroke-linejoin="round">
+<path d="m9 18 6-6-6-6"/>
+</svg>
+</button>
+
+</div>
+
+<div class="text-center mt-4 mb-6" id="dots"></div>
+
+<!-- DETAILS -->
+
+<div class="bg-white p-6 rounded-xl shadow">
+
+<p class="text-3xl font-bold text-indigo-700 mb-3">
+₹ {{ car.price }}
+</p>
+
+<ul class="space-y-1">
+<li><b>Fuel:</b> {{ car.fuel }}</li>
+<li><b>Transmission:</b> {{ car.transmission }}</li>
+<li><b>Mileage:</b> {{ car.mileage }} km</li>
+<li><b>Owners:</b> {{ car.owners }}</li>
+<li><b>Year:</b> {{ car.year }}</li>
+</ul>
+
+<!-- CONTENT BLOCK -->
+
+<div class="mt-5 text-gray-700 leading-relaxed">
+
+<p>
+This {{ car.make }} {{ car.model }} {{ car.year }} is a verified used car available in Ahmedabad.
+The vehicle has been inspected for condition, documents, and ownership clarity.
+</p>
+
+<p class="mt-2">
+CarsAvailable.in helps buyers find trusted second-hand cars with transparent pricing and genuine seller information.
+</p>
+
+</div>
+
+<a href="https://wa.me/917201006034?text=I%20am%20interested%20in%20{{ car.make }}%20{{ car.model }}%20{{ car.year }}"
+class="block mt-6 bg-green-600 text-white text-center py-3 rounded-lg font-bold">
+Message Dealer on WhatsApp
+</a>
+
+</div>
+</div>
+
+<script>
+
+const track = document.getElementById('track');
+const slides = document.querySelectorAll('.slide');
+const dotsContainer = document.getElementById('dots');
+
+let index = 0;
+
+if (dotsContainer) {
+
+dotsContainer.innerHTML = '';
+
+slides.forEach((_, i) => {
+
+let d = document.createElement('span');
+
+d.className = 'dot' + (i === 0 ? ' active' : '');
+
+d.onclick = () => move(i);
+
+dotsContainer.appendChild(d);
+
+});
+
+}
+
+function move(i) {
+
+index = i;
+
+track.style.transform = `translateX(-${index * 100}%)`;
+
+document.querySelectorAll('.dot').forEach((d, n) =>
+d.classList.toggle('active', n === i));
+
+}
+
+function nextBtn() {
+
+index = (index < slides.length - 1) ? index + 1 : 0;
+
+move(index);
+
+}
+
+function prevBtn() {
+
+index = (index > 0) ? index - 1 : slides.length - 1;
+
+move(index);
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,299 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Cars Available Marketplace | Buy Used Cars</title>
+
+<meta name="description" content="Cars Available Marketplace – Buy used cars. View updated listings with photos, prices & contact details.">
+
+<style>
+.card-shadow {
+    box-shadow: 0 10px 15px -3 rgba(0,0,0,0.08), 0 4px 6 -2 rgba(0,0,0,0.04);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-shadow:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5 rgba(0,0,0,0.1), 0 10px 10px -5 rgba(0,0,0,0.06);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: rgba(0,0,0,0.6);
+    overflow-y: auto;
+    pointer-events: auto;
+}
+.modal-content {
+    background: white;
+    margin: auto;
+    padding: 1rem;
+    border-radius: 1rem;
+    max-width: 700px;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+.slide { display: none; }
+
+.slide img {
+    width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: contain;
+    background-color: #f0f0f0;
+}
+
+.site-footer {
+  background: #0f172a;
+  color: #cbd5e1;
+  padding: 40px 0 0;
+}
+
+.footer-container {
+  max-width: 1100px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  padding: 0 20px;
+}
+
+.footer-box h3 { color: #ffffff; margin-bottom: 15px; }
+.footer-box p { font-size: 14px; line-height: 1.6; }
+
+.footer-box ul { list-style: none; padding: 0; }
+.footer-box ul li { margin-bottom: 8px; }
+
+.footer-box ul li a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 14px;
+}
+.footer-box ul li a:hover { color: #38bdf8; }
+
+.footer-bottom {
+  text-align: center;
+  padding: 15px 0;
+  margin-top: 30px;
+  background: #020617;
+}
+
+.content-area {
+    background: #ffffff;
+    margin-top: 40px;
+    padding: 30px;
+    border-radius: 12px;
+    line-height: 1.7;
+}
+</style>
+
+</head>
+
+<body class="bg-gray-50 font-sans">
+
+<!-- HEADER -->
+<header class="bg-white shadow-md sticky top-0 z-10">
+<div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+<div class="text-2xl font-black text-indigo-700">
+Cars Available
+</div>
+<div class="flex items-center space-x-4">
+
+    {% if user.is_authenticated %}
+
+    <span class="text-gray-700 font-medium">
+        Welcome, {{ user.username }}
+    </span>
+
+    <!-- ✅ SHOW ONLY TO DEALER -->
+    {% if user.profile.role == "dealer" %}
+    <a href="{% url 'dealer_dashboard' %}" 
+       class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700">
+       Dashboard
+    </a>
+    {% endif %}
+
+    <!-- LOGOUT -->
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit"
+            class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-600">
+            Logout
+        </button>
+    </form>
+
+{% else %}
+
+    <!-- ✅ FIXED LOGIN FORM -->
+    <a href="{% url 'login' %}" 
+   class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700">
+   Login
+</a>
+
+    <a href="{% url 'signup' %}" 
+       class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700">
+       Sign Up
+    </a>
+
+{% endif %}
+
+</div>
+</div>
+</header>
+
+<!-- HERO SECTION -->
+<main class="max-w-7xl mx-auto px-4 py-8">
+
+<section class="mb-8 bg-indigo-700 text-white p-8 rounded-xl shadow-lg">
+<h1 class="text-4xl font-extrabold mb-2">
+  Used Cars for Sale in Ahmedabad – CarsAvailable
+</h1>
+
+<p class="text-indigo-200 mb-6">Certified, inspected, and ready to go.</p>
+
+<div class="flex flex-col md:flex-row gap-4 bg-white p-4 rounded-lg mb-6">
+    <input type="text" id="search-input" placeholder="Search by Make or Model"
+        class="flex-grow p-3 border-2 border-gray-200 rounded-lg text-gray-800" />
+    <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg">
+        Search Listings
+    </button>
+</div>
+
+<section class="bg-white p-8 rounded-xl shadow-lg">
+    <h2 class="text-3xl font-bold text-gray-800 mb-4">
+        Buy Used Cars with Confidence
+    </h2>
+
+  <p class="text-gray-700 mb-4">
+    CarsAvailable.in is a trusted used car marketplace operated by Shakti Motors in Ahmedabad.
+  </p>
+  <p class="text-gray-700 leading-relaxed mb-4">
+    CarsAvailable.in is a trusted used car marketplace operated by Shakti Motors in Ahmedabad.
+    We help buyers discover quality used cars with transparent pricing, verified details,
+    and genuine seller information.
+  </p>
+
+  <p class="text-gray-700 leading-relaxed mb-4">
+    Each listing on our platform includes real photos, mileage information, fuel type,
+    transmission details, ownership history, and competitive pricing to help buyers
+    make informed decisions.
+  </p>
+
+  <p class="text-gray-700 leading-relaxed mb-4">
+    Our goal is to simplify the used car buying experience by allowing customers to browse
+    available cars online and directly connect with the dealer through WhatsApp for fast
+    and reliable communication.
+  </p>
+
+  <p class="text-gray-700 leading-relaxed">
+    CarsAvailable.in focuses on transparency, trust, and user satisfaction. We continuously
+    update our listings to ensure buyers always see accurate and current information.
+  </p>
+</section>
+
+</section>
+
+<!-- CAR LISTINGS -->
+<section>
+
+<div class="flex justify-between items-center mb-6 border-b pb-3">
+<h2 class="text-2xl font-bold text-gray-800">
+Available Listings
+</h2>
+</div>
+
+<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+{% for car in cars %}
+
+<div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition">
+
+<!-- ✅ FINAL IMAGE FIX (BASED ON YOUR MODEL) -->
+{% if car.images.first %}
+    <img src="{{ car.images.first.image.url }}" class="h-48 w-full object-cover">
+{% else %}
+    <img src="{% static 'images/no-car.png' %}" class="h-48 w-full object-cover">
+{% endif %}
+
+<div class="p-4">
+
+<h3 class="font-bold text-lg">
+{{ car.make }} {{ car.model }} ({{ car.year }})
+</h3>
+
+<p class="text-indigo-700 text-2xl font-extrabold">
+₹ {{ car.price }}
+</p>
+
+<p class="text-sm text-gray-500">
+{{ car.mileage }} km • {{ car.fuel }} • {{ car.transmission }}
+</p>
+
+<a href="{% url 'car_detail' car.id %}" 
+class="block mt-4 bg-indigo-600 text-white text-center py-2 rounded-lg font-bold hover:bg-indigo-700">
+View Details
+</a>
+
+</div>
+
+</div>
+
+{% empty %}
+<p>No cars available.</p>
+{% endfor %}
+
+</div>
+
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-container">
+
+    <div class="footer-box">
+      <h3>CarsAvailable</h3>
+      <p>
+        CarsAvailable is a trusted platform to buy and sell quality used cars.
+        We provide verified listings with transparent details.
+      </p>
+    </div>
+
+    <div class="footer-box">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="{% url 'about' %}">About Us</a></li>
+        <li><a href="{% url 'contact' %}">Contact Us</a></li>
+        <li><a href="{% url 'privacy' %}">Privacy Policy</a></li>
+        <li><a href="{% url 'terms' %}">Terms & Conditions</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-box">
+      <h3>Contact</h3>
+      <p>Email: ayushp3303@gmail.com</p>
+      <p>Location: Shakti Motors near Annapurna Residency, Vastral, Ahmedabad.</p>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    © 2025 CarsAvailable.in – Shakti Motors
+  </div>
+</footer>
+
+</body>
+</html>

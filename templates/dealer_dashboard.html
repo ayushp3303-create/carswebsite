@@ -1,0 +1,163 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dealer Dashboard - Add Car</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-gray-100">
+
+<div class="mx-4 sm:mx-auto max-w-md bg-white p-6 rounded-xl shadow-lg mt-10">
+
+<h2 class="text-2xl font-bold mb-4 text-indigo-700 text-center">
+Add New Car
+</h2>
+
+{% if success %}
+<p class="text-green-600 font-semibold mb-4 text-center">
+Car Added Successfully!
+</p>
+{% endif %}
+
+<form method="POST" enctype="multipart/form-data" class="space-y-4">
+
+{% csrf_token %}
+
+<input type="text" name="make" placeholder="Make"
+required class="w-full p-2 border rounded">
+
+<input type="text" name="model" placeholder="Model"
+required class="w-full p-2 border rounded">
+
+<input type="number" name="year" placeholder="Year"
+required class="w-full p-2 border rounded">
+
+<input type="number" name="owners"
+placeholder="Owners (1,2,3...)"
+required class="w-full p-2 border rounded">
+
+<input type="number" name="price"
+placeholder="Price"
+required class="w-full p-2 border rounded">
+
+<input type="number" name="mileage"
+placeholder="Mileage"
+required class="w-full p-2 border rounded">
+
+<input type="text" name="fuel"
+placeholder="Fuel"
+required class="w-full p-2 border rounded">
+
+<input type="text" name="transmission"
+placeholder="Transmission"
+required class="w-full p-2 border rounded">
+
+<input type="file"
+name="images"
+multiple
+required
+class="w-full p-2 border rounded">
+
+<div id="preview" class="flex flex-wrap gap-2 mt-2"></div>
+
+<button type="submit"
+class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition font-semibold">
+
+Add Car
+
+</button>
+
+</form>
+
+</div>
+
+
+<script>
+
+const input = document.querySelector('input[name="images"]');
+const preview = document.getElementById('preview');
+
+input.addEventListener('change', () => {
+
+preview.innerHTML = '';
+
+Array.from(input.files).forEach(file => {
+
+const reader = new FileReader();
+
+reader.onload = e => {
+
+const img = document.createElement('img');
+
+img.src = e.target.result;
+
+img.className = 'w-24 h-24 object-cover rounded';
+
+preview.appendChild(img);
+
+};
+
+reader.readAsDataURL(file);
+
+});
+
+});
+
+</script>
+<hr class="my-6">
+
+<h2 class="text-xl font-bold text-gray-800 mb-4 text-center">
+Your Listings
+</h2>
+
+<div class="space-y-4">
+
+{% for car in cars %}
+
+<div class="bg-gray-50 p-4 rounded-lg shadow">
+
+    <!-- IMAGE -->
+    {% if car.images.first %}
+        <img src="{{ car.images.first.image.url }}" 
+             class="w-full h-40 object-cover rounded mb-2">
+    {% else %}
+        <img src="{% static 'images/no-car.png' %}" 
+             class="w-full h-40 object-cover rounded mb-2">
+    {% endif %}
+
+    <!-- DETAILS -->
+    <h3 class="font-bold text-lg">
+        {{ car.make }} {{ car.model }} ({{ car.year }})
+    </h3>
+
+    <p class="text-indigo-700 font-bold">
+        ₹ {{ car.price }}
+    </p>
+
+    <!-- DELETE BUTTON -->
+    <a href="{% url 'delete_car' car.id %}" 
+       onclick="return confirm('Delete this car?')"
+       class="block mt-3 bg-red-600 text-white text-center py-2 rounded-lg hover:bg-red-700">
+       Delete
+    </a>
+
+</div>
+
+{% empty %}
+
+<p class="text-center text-gray-500">
+No cars added yet.
+</p>
+
+{% endfor %}
+
+</div>
+</body>
+</html>
