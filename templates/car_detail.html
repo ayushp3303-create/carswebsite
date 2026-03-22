@@ -4,7 +4,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ car.make }} {{ car.model }} Details | Cars Available</title>
+
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -14,49 +16,52 @@
 <!-- HEADER -->
 <header class="bg-white shadow-md sticky top-0 z-10">
     <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
-        <div class="text-2xl font-black text-indigo-700">Cars Available</div>
-        <div class="text-gray-600">SHAKTI MOTORS</div>
+        <div class="text-xl md:text-2xl font-black text-indigo-700">Cars Available</div>
+        <div class="text-sm md:text-base text-gray-600">SHAKTI MOTORS</div>
     </div>
 </header>
 
 <!-- MAIN -->
-<main class="max-w-7xl mx-auto px-4 py-8">
+<main class="max-w-7xl mx-auto px-3 md:px-4 py-6 md:py-8">
 
-<section class="bg-white p-8 rounded-xl shadow-lg mb-8">
+<section class="bg-white p-4 md:p-8 rounded-xl shadow-lg mb-6 md:mb-8">
 
-    <h1 class="text-3xl font-bold mb-4">
+    <!-- TITLE -->
+    <h1 class="text-xl md:text-3xl font-bold mb-3">
         {{ car.make }} {{ car.model }} ({{ car.year }})
     </h1>
 
-    <p class="text-indigo-700 text-2xl font-extrabold mb-2">
+    <!-- PRICE -->
+    <p class="text-indigo-700 text-xl md:text-2xl font-extrabold mb-2">
         ₹ {{ car.price|intcomma }}
     </p>
 
-    <p class="text-gray-700 mb-2">
+    <!-- BASIC INFO -->
+    <p class="text-gray-700 text-sm md:text-base mb-2">
         {{ car.mileage }} km • {{ car.fuel }} • {{ car.transmission }}
     </p>
 
-    <p class="text-gray-700 mb-4">
+    <p class="text-gray-700 text-sm md:text-base mb-4">
         Owners: {{ car.owners }}
     </p>
 
     <!-- 🔥 IMAGE SLIDER -->
-    <div class="relative max-w-2xl mx-auto">
+    <div class="relative w-full max-w-3xl mx-auto">
 
         {% for image in images %}
         <img src="{{ image.image.url }}" 
-             class="slide w-full h-[250px] md:h-[400px] object-contain rounded-xl shadow-md {% if forloop.first %}block{% else %}hidden{% endif %}">
+             class="slide w-full h-[220px] sm:h-[300px] md:h-[420px] object-contain rounded-xl shadow-md {% if forloop.first %}block{% else %}hidden{% endif %}">
         {% endfor %}
 
         <!-- LEFT BUTTON -->
         <button onclick="changeSlide(-1)" 
-        class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 text-white px-4 py-3 text-xl rounded-full">
+        class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 text-white px-3 py-2 md:px-4 md:py-3 text-lg md:text-xl rounded-full">
         ❮
         </button>
 
         <!-- RIGHT BUTTON -->
         <button onclick="changeSlide(1)" 
-        class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 text-white px-4 py-3 text-xl rounded-full">
+        class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 text-white px-3 py-2 md:px-4 md:py-3 text-lg md:text-xl rounded-full">
         ❯
         </button>
 
@@ -64,25 +69,25 @@
 
     <!-- WHATSAPP BUTTON -->
     <a href="https://wa.me/917201006034?text=I'm interested in {{ car.make }} {{ car.model }}" 
-       class="block mt-6 bg-green-600 text-white text-center py-3 rounded-lg font-bold hover:bg-green-700">
+       class="block mt-6 bg-green-600 text-white text-center py-3 rounded-lg font-bold hover:bg-green-700 transition">
        Message Dealer
     </a>
 
 </section>
 
 <!-- DETAILS -->
-<section class="bg-white p-6 rounded-xl shadow">
-<h2 class="text-xl font-bold mb-4">Car Details</h2>
+<section class="bg-white p-4 md:p-6 rounded-xl shadow">
+<h2 class="text-lg md:text-xl font-bold mb-4">Car Details</h2>
 
-<ul class="list-disc pl-6 space-y-2">
-    <li>Make: {{ car.make }}</li>
-    <li>Model: {{ car.model }}</li>
-    <li>Year: {{ car.year }}</li>
-    <li>Price: ₹ {{ car.price|intcomma }}</li>
-    <li>Mileage: {{ car.mileage }} km</li>
-    <li>Fuel Type: {{ car.fuel }}</li>
-    <li>Transmission: {{ car.transmission }}</li>
-    <li>Number of Owners: {{ car.owners }}</li>
+<ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm md:text-base">
+    <li><strong>Make:</strong> {{ car.make }}</li>
+    <li><strong>Model:</strong> {{ car.model }}</li>
+    <li><strong>Year:</strong> {{ car.year }}</li>
+    <li><strong>Price:</strong> ₹ {{ car.price|intcomma }}</li>
+    <li><strong>Mileage:</strong> {{ car.mileage }} km</li>
+    <li><strong>Fuel:</strong> {{ car.fuel }}</li>
+    <li><strong>Transmission:</strong> {{ car.transmission }}</li>
+    <li><strong>Owners:</strong> {{ car.owners }}</li>
 </ul>
 
 </section>
@@ -90,7 +95,7 @@
 </main>
 
 <!-- FOOTER -->
-<footer class="bg-gray-900 text-gray-300 text-center p-4 mt-10">
+<footer class="bg-gray-900 text-gray-300 text-center p-3 md:p-4 mt-8 md:mt-10 text-sm md:text-base">
     © 2025 CarsAvailable.in – Shakti Motors
 </footer>
 
@@ -117,7 +122,7 @@ function changeSlide(step) {
 }
 </script>
 
-<!-- 🔥 SWIPE SUPPORT (MOBILE) -->
+<!-- 🔥 SWIPE SUPPORT -->
 <script>
 let startX = 0;
 
@@ -129,9 +134,9 @@ document.addEventListener("touchend", function(e) {
     let endX = e.changedTouches[0].clientX;
 
     if (startX - endX > 50) {
-        changeSlide(1); // swipe left
+        changeSlide(1);
     } else if (endX - startX > 50) {
-        changeSlide(-1); // swipe right
+        changeSlide(-1);
     }
 });
 </script>
